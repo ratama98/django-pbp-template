@@ -23,6 +23,28 @@ def show_wishlist(request):
     }
     return render(request, "wishlist.html", context)
 
+def submit(request):
+    if request.method == 'POST':
+        nama_barang = request.POST.get('nama_barang')
+        harga_barang = request.POST.get('harga_barang')
+        deskripsi = request.POST.get('deskripsi')
+        barang = BarangWishlist(nama_barang=nama_barang, harga_barang=harga_barang, deskripsi=deskripsi)
+        barang.save()
+        return redirect('wishlist:show_ajax')
+
+    return render(request, "wishlist_ajax.html")
+
+
+def show_ajax(request):
+    data_barang_wishlist = BarangWishlist.objects.all()
+
+    context = {
+        'list_barang': data_barang_wishlist,
+        'nama': 'Raditya Aditama',
+        'last_login': request.COOKIES['last_login'],
+    }
+    return render(request, "wishlist_ajax.html", context)
+
 def show_xml(request):
     data = BarangWishlist.objects.all()
 
